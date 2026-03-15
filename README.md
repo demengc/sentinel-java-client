@@ -1,13 +1,23 @@
 # Sentinel Java Client
 
-Java client library for the [Sentinel](https://github.com/demengc/sentinel) API.
+[![Maven Central](https://img.shields.io/maven-central/v/dev.demeng.sentinel/sentinel-java-client)](https://central.sonatype.com/artifact/dev.demeng.sentinel/sentinel-java-client)
+
+Java client library for the [Sentinel](https://demeng.dev/sentinel) API.
 
 ## Installation
+
+This library is published to Maven Central.
 
 ### Gradle
 
 ```kotlin
-implementation("dev.demeng.sentinel:sentinel-java-client:2.0.0")
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("dev.demeng.sentinel:sentinel-java-client:2.0.0")
+}
 ```
 
 ### Maven
@@ -99,4 +109,4 @@ Supported detail types: `BlacklistDetails`, `ExcessiveServersDetails`, `Excessiv
 
 ## License
 
-[MIT](https://opensource.org/licenses/MIT)
+[MIT](LICENSE)
