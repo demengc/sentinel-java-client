@@ -2,6 +2,7 @@ plugins {
     id("java-library")
     id("maven-publish")
     id("signing")
+    id("com.gradleup.shadow") version "9.0.0-beta12"
     id("com.gradleup.nmcp") version "1.4.4"
     id("com.diffplug.spotless") version "8.2.1"
 }
@@ -30,6 +31,16 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
+tasks.shadowJar {
+    archiveClassifier.set("")
+    relocate("com.google.gson", "dev.demeng.sentinel.client.internal.gson")
+    minimize()
+}
+
+tasks.jar {
+    archiveClassifier.set("plain")
+}
+
 tasks.test {
     useJUnitPlatform()
 }
@@ -51,7 +62,9 @@ tasks.javadoc {
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            from(components["java"])
+            from(components["shadow"])
+            artifact(tasks.named("sourcesJar"))
+            artifact(tasks.named("javadocJar"))
             pom {
                 name.set("Sentinel Java Client")
                 description.set("Java client library for Sentinel")
