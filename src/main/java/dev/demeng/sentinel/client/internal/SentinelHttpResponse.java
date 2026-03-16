@@ -11,7 +11,7 @@ public record SentinelHttpResponse(int statusCode, String body, Map<String, List
     for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
       if (entry.getKey().toLowerCase(Locale.ROOT).equals(lowerName)) {
         List<String> values = entry.getValue();
-        return (values != null && !values.isEmpty()) ? values.getFirst() : null;
+        return (values != null && !values.isEmpty()) ? values.get(0) : null;
       }
     }
     return null;
