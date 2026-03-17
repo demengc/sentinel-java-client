@@ -67,7 +67,7 @@ class LicenseResponseParserTest {
           "id": "uuid-2",
           "key": "KEY-456",
           "product": {"id": "p1", "name": "Prod", "description": null, "logoUrl": null},
-          "tier": null,
+          "tier": {"id": "t1", "name": "Default", "entitlements": []},
           "issuer": {"type": "API_KEY", "id": "iss-1", "displayName": "Admin"},
           "createdAt": "2026-01-01T00:00:00Z",
           "expiration": null,
@@ -86,7 +86,7 @@ class LicenseResponseParserTest {
 
     License license = parser.parse(resultWithLicense(json));
 
-    assertNull(license.tier());
+    assertEquals("Default", license.tier().name());
     assertNull(license.expiration());
     assertNull(license.note());
     assertEquals(-1, license.maxServers());
@@ -104,7 +104,7 @@ class LicenseResponseParserTest {
           "id": "uuid-3",
           "key": "KEY-789",
           "product": {"id": "p1", "name": "Prod", "description": null, "logoUrl": null},
-          "tier": null,
+          "tier": {"id": "t1", "name": "Default", "entitlements": []},
           "issuer": {"type": "API_KEY", "id": "iss-1", "displayName": "Admin"},
           "createdAt": "2026-01-01T00:00:00Z",
           "expiration": null,
@@ -133,7 +133,7 @@ class LicenseResponseParserTest {
         """
         {
           "id": "uuid-4", "key": "K", "product": {"id": "p", "name": "P", "description": null, "logoUrl": null},
-          "tier": null, "issuer": {"type": "T", "id": "I", "displayName": "D"},
+          "tier": {"id": "t1", "name": "Default", "entitlements": []}, "issuer": {"type": "T", "id": "I", "displayName": "D"},
           "createdAt": "2026-01-01T00:00:00Z", "expiration": null, "maxServers": -1, "maxIps": -1,
           "note": null, "connections": {"a": "b"}, "subUsers": [], "servers": {},
           "ips": {}, "additionalEntitlements": [], "entitlements": ["x"], "blacklist": null

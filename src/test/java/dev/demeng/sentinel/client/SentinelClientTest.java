@@ -153,7 +153,7 @@ class SentinelClientTest {
 
     SignatureVerifier tempVerifier = new SignatureVerifier(publicKeyBase64);
     String canonical =
-        tempVerifier.buildCanonicalPayload(nonce, now, null, 0, -1, 0, -1, null, null);
+        tempVerifier.buildCanonicalPayload(nonce, now, null, 0, -1, 0, -1, "Default", null);
     String signature = sign(canonical);
 
     String json =
@@ -164,7 +164,7 @@ class SentinelClientTest {
                   "message": "OK",
                   "result": {"validation": {"nonce": "%s", "timestamp": %d,
                     "details": {"expiration": null, "serverCount": 0,
-                      "maxServers": -1, "ipCount": 0, "maxIps": -1, "tier": null,
+                      "maxServers": -1, "ipCount": 0, "maxIps": -1, "tier": "Default",
                       "entitlements": null}, "signature": "%s"}}
                 }
                 """,

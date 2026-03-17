@@ -36,21 +36,17 @@ public final class LicenseResponseParser {
             getStringOrNull(productObj, "description"),
             getStringOrNull(productObj, "logoUrl"));
 
-    LicenseTier tier = null;
-    JsonElement tierEl = obj.get("tier");
-    if (tierEl != null && !tierEl.isJsonNull()) {
-      JsonObject tierObj = tierEl.getAsJsonObject();
-      Set<String> tierEntitlements = new LinkedHashSet<>();
-      JsonElement entEl = tierObj.get("entitlements");
-      if (entEl != null && !entEl.isJsonNull()) {
-        for (JsonElement e : entEl.getAsJsonArray()) {
-          tierEntitlements.add(e.getAsString());
-        }
+    JsonObject tierObj = obj.getAsJsonObject("tier");
+    Set<String> tierEntitlements = new LinkedHashSet<>();
+    JsonElement entEl = tierObj.get("entitlements");
+    if (entEl != null && !entEl.isJsonNull()) {
+      for (JsonElement e : entEl.getAsJsonArray()) {
+        tierEntitlements.add(e.getAsString());
       }
-      tier =
-          new LicenseTier(
-              tierObj.get("id").getAsString(), getStringOrNull(tierObj, "name"), tierEntitlements);
     }
+    LicenseTier tier =
+        new LicenseTier(
+            tierObj.get("id").getAsString(), getStringOrNull(tierObj, "name"), tierEntitlements);
 
     JsonObject issuerObj = obj.getAsJsonObject("issuer");
     LicenseIssuer issuer =

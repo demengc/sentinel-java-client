@@ -10,7 +10,7 @@ public record License(
     String id,
     String key,
     LicenseProduct product,
-    @Nullable LicenseTier tier,
+    LicenseTier tier,
     LicenseIssuer issuer,
     Instant createdAt,
     @Nullable Instant expiration,

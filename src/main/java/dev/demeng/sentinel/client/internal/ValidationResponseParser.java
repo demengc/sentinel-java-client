@@ -71,7 +71,7 @@ public final class ValidationResponseParser {
       int maxServers = detailsObj.get("maxServers").getAsInt();
       int ipCount = detailsObj.get("ipCount").getAsInt();
       int maxIps = detailsObj.get("maxIps").getAsInt();
-      String tier = getStringOrNull(detailsObj, "tier");
+      String tier = detailsObj.get("tier").getAsString();
 
       List<String> entitlementsList = null;
       Set<String> entitlementsSet;

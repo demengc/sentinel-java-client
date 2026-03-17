@@ -24,7 +24,7 @@ class PageResponseParserTest {
           "content": [{
             "id": "uuid-1", "key": "KEY-1",
             "product": {"id": "p1", "name": "Prod", "description": null, "logoUrl": null},
-            "tier": null, "issuer": {"type": "API_KEY", "id": "i1", "displayName": "Admin"},
+            "tier": {"id": "t1", "name": "Default", "entitlements": []}, "issuer": {"type": "API_KEY", "id": "i1", "displayName": "Admin"},
             "createdAt": "2026-01-01T00:00:00Z", "expiration": null,
             "maxServers": -1, "maxIps": -1, "note": null,
             "connections": {}, "subUsers": [], "servers": {}, "ips": {},

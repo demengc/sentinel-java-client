@@ -87,7 +87,7 @@ class ValidationResponseParserTest {
                       "maxServers": -1,
                       "ipCount": 0,
                       "maxIps": -1,
-                      "tier": null,
+                      "tier": "Default",
                       "entitlements": null
                     },
                     "signature": null
@@ -98,11 +98,11 @@ class ValidationResponseParserTest {
     var parsed = parser.parse(apiResponse(200, "SUCCESS", "License validated.", resultJson));
     ValidationDetails details = parsed.result().getDetails();
     assertNull(details.expiration());
-    assertNull(details.tier());
+    assertEquals("Default", details.tier());
     assertTrue(details.entitlements().isEmpty());
     assertNull(parsed.signature());
     assertNull(parsed.expiration());
-    assertNull(parsed.tier());
+    assertEquals("Default", parsed.tier());
     assertNull(parsed.entitlements());
   }
 
