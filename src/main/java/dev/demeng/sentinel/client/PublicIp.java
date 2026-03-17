@@ -41,8 +41,7 @@ public final class PublicIp {
       HttpClient client = HttpClient.newBuilder().connectTimeout(timeout).build();
       HttpRequest request =
           HttpRequest.newBuilder().uri(URI.create(CHECKIP_URL)).timeout(timeout).GET().build();
-      HttpResponse<String> response =
-          client.send(request, HttpResponse.BodyHandlers.ofString());
+      HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
       if (response.statusCode() != 200) {
         return null;
       }
