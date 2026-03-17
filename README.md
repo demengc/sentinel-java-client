@@ -61,10 +61,10 @@ Every validation request requires `product` and a license identifier:
   user ID) to resolve the license through a platform connection. If the product has auto-creation
   enabled and no matching license exists, one is created automatically.
 
-| Optional Field | Default | Notes |
-|---|---|---|
-| `server` | `MachineFingerprint.generate()` (see [Utilities](#utilities)) | Stable machine identifier |
-| `ip` | Auto-detected from request | Tracked against the license's IP limit |
+| Optional Field | Default |
+|---|---|
+| `server` | `MachineFingerprint.generate()` (see [Utilities](#utilities)) |
+| `ip` | Auto-detected from request |
 
 ### Validating by Connection
 
