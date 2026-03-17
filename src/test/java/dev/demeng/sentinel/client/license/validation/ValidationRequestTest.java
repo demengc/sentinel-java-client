@@ -28,15 +28,30 @@ class ValidationRequestTest {
 
   @Test
   void buildsWithOnlyRequiredFields() {
-    ValidationRequest request =
-        ValidationRequest.builder().product("my-product").server("server-1").build();
+    ValidationRequest request = ValidationRequest.builder().product("my-product").build();
 
     assertNull(request.getKey());
     assertEquals("my-product", request.getProduct());
-    assertEquals("server-1", request.getServer());
+    assertTrue(request.getServer().matches("[0-9a-f]{32}"));
     assertNull(request.getIp());
     assertNull(request.getConnectionPlatform());
     assertNull(request.getConnectionValue());
+  }
+
+  @Test
+  void defaultServerIsStableAndValid() {
+    ValidationRequest first = ValidationRequest.builder().product("p").build();
+    ValidationRequest second = ValidationRequest.builder().product("p").build();
+
+    assertEquals(first.getServer(), second.getServer());
+    assertTrue(first.getServer().matches("[0-9a-f]{32}"));
+  }
+
+  @Test
+  void explicitServerIsPreserved() {
+    ValidationRequest request =
+        ValidationRequest.builder().product("my-product").server("custom-server").build();
+    assertEquals("custom-server", request.getServer());
   }
 
   @Test
@@ -46,14 +61,5 @@ class ValidationRequestTest {
             IllegalStateException.class,
             () -> ValidationRequest.builder().server("server-1").build());
     assertTrue(ex.getMessage().contains("product"));
-  }
-
-  @Test
-  void throwsWhenServerMissing() {
-    IllegalStateException ex =
-        assertThrows(
-            IllegalStateException.class,
-            () -> ValidationRequest.builder().product("my-product").build());
-    assertTrue(ex.getMessage().contains("server"));
   }
 }
