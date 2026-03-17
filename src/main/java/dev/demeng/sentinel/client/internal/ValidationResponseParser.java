@@ -3,30 +3,31 @@ package dev.demeng.sentinel.client.internal;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.demeng.sentinel.client.exception.SentinelApiException;
-import dev.demeng.sentinel.client.validation.FailureDetails;
-import dev.demeng.sentinel.client.validation.LicenseDetails;
-import dev.demeng.sentinel.client.validation.ValidationResult;
-import dev.demeng.sentinel.client.validation.ValidationResultType;
+import dev.demeng.sentinel.client.license.validation.FailureDetails;
+import dev.demeng.sentinel.client.license.validation.ValidationDetails;
+import dev.demeng.sentinel.client.license.validation.ValidationResult;
+import dev.demeng.sentinel.client.license.validation.ValidationResultType;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import org.jspecify.annotations.Nullable;
 
 public final class ValidationResponseParser {
 
   public record ParsedValidationResponse(
       ValidationResult result,
-      String nonce,
+      @Nullable String nonce,
       long timestamp,
-      String signature,
-      String expiration,
+      @Nullable String signature,
+      @Nullable String expiration,
       int serverCount,
       int maxServers,
       int ipCount,
       int maxIps,
-      String tier,
-      List<String> entitlements) {}
+      @Nullable String tier,
+      @Nullable List<String> entitlements) {}
 
   public ParsedValidationResponse parse(ApiResponseParser.ApiResponse response)
       throws SentinelApiException {
@@ -85,8 +86,8 @@ public final class ValidationResponseParser {
         entitlementsSet = Set.of();
       }
 
-      LicenseDetails details =
-          new LicenseDetails(
+      ValidationDetails details =
+          new ValidationDetails(
               expiration, serverCount, maxServers, ipCount, maxIps, tier, entitlementsSet);
 
       return new ParsedValidationResponse(
@@ -106,7 +107,8 @@ public final class ValidationResponseParser {
     }
   }
 
-  private static FailureDetails parseFailureDetails(ValidationResultType type, JsonObject result) {
+  private static @Nullable FailureDetails parseFailureDetails(
+      ValidationResultType type, @Nullable JsonObject result) {
     if (result == null) return null;
     try {
       return switch (type) {
@@ -127,7 +129,7 @@ public final class ValidationResponseParser {
     }
   }
 
-  private static String getStringOrNull(JsonObject obj, String key) {
+  private static @Nullable String getStringOrNull(JsonObject obj, String key) {
     JsonElement el = obj.get(key);
     if (el == null || el.isJsonNull()) return null;
     return el.getAsString();

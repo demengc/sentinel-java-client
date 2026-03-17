@@ -1,7 +1,8 @@
-package dev.demeng.sentinel.client.validation;
+package dev.demeng.sentinel.client.license.validation;
 
 import java.time.Instant;
 import java.util.Set;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Details of a successfully validated license.
@@ -16,16 +17,16 @@ import java.util.Set;
  * @param entitlements the set of entitlement identifiers granted by this license (never {@code
  *     null})
  */
-public record LicenseDetails(
-    Instant expiration,
+public record ValidationDetails(
+    @Nullable Instant expiration,
     int serverCount,
     int maxServers,
     int ipCount,
     int maxIps,
-    String tier,
+    @Nullable String tier,
     Set<String> entitlements) {
 
-  public LicenseDetails {
+  public ValidationDetails {
     entitlements = entitlements == null ? Set.of() : Set.copyOf(entitlements);
   }
 }

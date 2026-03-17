@@ -1,16 +1,18 @@
 package dev.demeng.sentinel.client.exception;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Thrown when the Sentinel API returns an error response (e.g. 401 Unauthorized, 429 Too Many
  * Requests, or 500 Internal Server Error).
  *
  * <p>This exception is not thrown for 403 validation failures, which are instead returned as a
- * failed {@link dev.demeng.sentinel.client.validation.ValidationResult}.
+ * failed {@link dev.demeng.sentinel.client.license.validation.ValidationResult}.
  */
 public final class SentinelApiException extends SentinelException {
 
   private final int httpStatus;
-  private final String type;
+  private final @Nullable String type;
   private final int retryAfterSeconds;
 
   /**
@@ -20,7 +22,7 @@ public final class SentinelApiException extends SentinelException {
    * @param type the error type from the API response
    * @param message the error message from the API response
    */
-  public SentinelApiException(int httpStatus, String type, String message) {
+  public SentinelApiException(int httpStatus, @Nullable String type, String message) {
     this(httpStatus, type, message, -1, null);
   }
 
@@ -32,7 +34,8 @@ public final class SentinelApiException extends SentinelException {
    * @param message the error message from the API response
    * @param retryAfterSeconds seconds to wait before retrying, or {@code -1} if not specified
    */
-  public SentinelApiException(int httpStatus, String type, String message, int retryAfterSeconds) {
+  public SentinelApiException(
+      int httpStatus, @Nullable String type, String message, int retryAfterSeconds) {
     this(httpStatus, type, message, retryAfterSeconds, null);
   }
 
@@ -44,7 +47,8 @@ public final class SentinelApiException extends SentinelException {
    * @param message the error message from the API response
    * @param cause the underlying exception
    */
-  public SentinelApiException(int httpStatus, String type, String message, Throwable cause) {
+  public SentinelApiException(
+      int httpStatus, @Nullable String type, String message, @Nullable Throwable cause) {
     this(httpStatus, type, message, -1, cause);
   }
 
@@ -58,7 +62,11 @@ public final class SentinelApiException extends SentinelException {
    * @param cause the underlying exception, or {@code null}
    */
   public SentinelApiException(
-      int httpStatus, String type, String message, int retryAfterSeconds, Throwable cause) {
+      int httpStatus,
+      @Nullable String type,
+      String message,
+      int retryAfterSeconds,
+      @Nullable Throwable cause) {
     super(message, cause);
     this.httpStatus = httpStatus;
     this.type = type;
@@ -79,7 +87,7 @@ public final class SentinelApiException extends SentinelException {
    *
    * @return the error type, or {@code null}
    */
-  public String getType() {
+  public @Nullable String getType() {
     return type;
   }
 

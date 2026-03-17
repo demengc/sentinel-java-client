@@ -1,6 +1,7 @@
-package dev.demeng.sentinel.client.validation;
+package dev.demeng.sentinel.client.license.validation;
 
 import java.time.Instant;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Additional details returned by the API for certain validation failure types. Obtained from {@link
@@ -16,7 +17,7 @@ public sealed interface FailureDetails {
    * @param timestamp when the license was blacklisted
    * @param reason the reason for blacklisting, or {@code null} if not provided
    */
-  record BlacklistDetails(Instant timestamp, String reason) implements FailureDetails {}
+  record BlacklistDetails(Instant timestamp, @Nullable String reason) implements FailureDetails {}
 
   /**
    * Details for a {@link ValidationResultType#EXCESSIVE_SERVERS} failure.

@@ -9,9 +9,9 @@ import dev.demeng.sentinel.client.internal.ReplayProtector;
 import dev.demeng.sentinel.client.internal.SentinelHttpClient;
 import dev.demeng.sentinel.client.internal.SentinelHttpResponse;
 import dev.demeng.sentinel.client.internal.SignatureVerifier;
-import dev.demeng.sentinel.client.validation.ValidationRequest;
-import dev.demeng.sentinel.client.validation.ValidationResult;
-import dev.demeng.sentinel.client.validation.ValidationResultType;
+import dev.demeng.sentinel.client.license.validation.ValidationRequest;
+import dev.demeng.sentinel.client.license.validation.ValidationResult;
+import dev.demeng.sentinel.client.license.validation.ValidationResultType;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -76,7 +76,7 @@ class SentinelClientTest {
 
     SentinelClient client =
         clientWithMockedHttp(new SentinelHttpResponse(200, json, Map.of()), false);
-    ValidationResult result = client.validate(testRequest());
+    ValidationResult result = client.licenses().validate(testRequest());
 
     assertTrue(result.isValid());
     assertEquals("Pro", result.getDetails().tier());
@@ -109,7 +109,7 @@ class SentinelClientTest {
 
     SentinelClient client =
         clientWithMockedHttp(new SentinelHttpResponse(200, json, Map.of()), true);
-    ValidationResult result = client.validate(testRequest());
+    ValidationResult result = client.licenses().validate(testRequest());
 
     assertTrue(result.isValid());
   }
@@ -142,7 +142,8 @@ class SentinelClientTest {
     SentinelClient client =
         clientWithMockedHttp(new SentinelHttpResponse(200, json, Map.of()), true);
 
-    assertThrows(SignatureVerificationException.class, () -> client.validate(testRequest()));
+    assertThrows(
+        SignatureVerificationException.class, () -> client.licenses().validate(testRequest()));
   }
 
   @Test
@@ -177,8 +178,8 @@ class SentinelClientTest {
     ReplayProtector protector = new ReplayProtector(Duration.ofSeconds(30), 1000);
     SentinelClient client = new SentinelClient(mockHttp, verifier, protector);
 
-    client.validate(testRequest());
-    assertThrows(ReplayDetectedException.class, () -> client.validate(testRequest()));
+    client.licenses().validate(testRequest());
+    assertThrows(ReplayDetectedException.class, () -> client.licenses().validate(testRequest()));
   }
 
   @Test
@@ -191,7 +192,7 @@ class SentinelClientTest {
 
     SentinelClient client =
         clientWithMockedHttp(new SentinelHttpResponse(403, json, Map.of()), false);
-    ValidationResult result = client.validate(testRequest());
+    ValidationResult result = client.licenses().validate(testRequest());
 
     assertFalse(result.isValid());
     assertEquals(ValidationResultType.EXPIRED_LICENSE, result.getType());
@@ -223,7 +224,7 @@ class SentinelClientTest {
         clientWithMockedHttp(new SentinelHttpResponse(401, json, Map.of()), false);
 
     SentinelApiException ex =
-        assertThrows(SentinelApiException.class, () -> client.validate(testRequest()));
+        assertThrows(SentinelApiException.class, () -> client.licenses().validate(testRequest()));
     assertEquals(401, ex.getHttpStatus());
   }
 }

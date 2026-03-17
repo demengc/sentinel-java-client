@@ -9,6 +9,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
@@ -127,5 +128,26 @@ class SentinelHttpClientTest {
     var captor = org.mockito.ArgumentCaptor.forClass(HttpRequest.class);
     verify(mockJavaClient).send(captor.capture(), any());
     assertEquals("https://api.example.com/api/v2/products", captor.getValue().uri().toString());
+  }
+
+  @Test
+  void multiValuedQueryParamsProduceRepeatedKeys() throws Exception {
+    HttpClient mockJavaClient = mock(HttpClient.class);
+    HttpResponse<String> mockResp = mockResponse(200, "{}");
+    when(mockJavaClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+        .thenReturn(mockResp);
+
+    SentinelHttpClient client = createClient(mockJavaClient);
+    client.requestWithMultiValuedParams(
+        "DELETE",
+        "/api/v2/licenses/KEY-1/connections",
+        Map.of("platforms", List.of("Discord", "Email")));
+
+    var captor = org.mockito.ArgumentCaptor.forClass(HttpRequest.class);
+    verify(mockJavaClient).send(captor.capture(), any());
+    String uri = captor.getValue().uri().toString();
+    assertTrue(uri.contains("platforms=Discord"));
+    assertTrue(uri.contains("platforms=Email"));
+    assertTrue(uri.contains("&"));
   }
 }

@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.demeng.sentinel.client.exception.SentinelApiException;
-import dev.demeng.sentinel.client.validation.FailureDetails;
-import dev.demeng.sentinel.client.validation.LicenseDetails;
-import dev.demeng.sentinel.client.validation.ValidationResult;
-import dev.demeng.sentinel.client.validation.ValidationResultType;
+import dev.demeng.sentinel.client.license.validation.FailureDetails;
+import dev.demeng.sentinel.client.license.validation.ValidationDetails;
+import dev.demeng.sentinel.client.license.validation.ValidationResult;
+import dev.demeng.sentinel.client.license.validation.ValidationResultType;
 import java.time.Instant;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -51,7 +51,7 @@ class ValidationResponseParserTest {
     assertTrue(result.isValid());
     assertEquals("License validated.", result.getMessage());
 
-    LicenseDetails details = result.getDetails();
+    ValidationDetails details = result.getDetails();
     assertEquals(Instant.parse("2026-12-31T23:59:59Z"), details.expiration());
     assertEquals(1, details.serverCount());
     assertEquals(3, details.maxServers());
@@ -96,7 +96,7 @@ class ValidationResponseParserTest {
                 """;
 
     var parsed = parser.parse(apiResponse(200, "SUCCESS", "License validated.", resultJson));
-    LicenseDetails details = parsed.result().getDetails();
+    ValidationDetails details = parsed.result().getDetails();
     assertNull(details.expiration());
     assertNull(details.tier());
     assertTrue(details.entitlements().isEmpty());

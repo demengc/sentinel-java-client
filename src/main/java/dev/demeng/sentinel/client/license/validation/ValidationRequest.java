@@ -1,4 +1,6 @@
-package dev.demeng.sentinel.client.validation;
+package dev.demeng.sentinel.client.license.validation;
+
+import org.jspecify.annotations.Nullable;
 
 /**
  * Request parameters for a license validation call.
@@ -8,12 +10,12 @@ package dev.demeng.sentinel.client.validation;
  */
 public final class ValidationRequest {
 
-  private final String key;
+  private final @Nullable String key;
   private final String product;
   private final String server;
-  private final String ip;
-  private final String connectionPlatform;
-  private final String connectionValue;
+  private final @Nullable String ip;
+  private final @Nullable String connectionPlatform;
+  private final @Nullable String connectionValue;
 
   private ValidationRequest(Builder builder) {
     this.key = builder.key;
@@ -36,7 +38,7 @@ public final class ValidationRequest {
   /**
    * @return the license key, or {@code null} if not set
    */
-  public String getKey() {
+  public @Nullable String getKey() {
     return key;
   }
 
@@ -57,21 +59,21 @@ public final class ValidationRequest {
   /**
    * @return the client IP address, or {@code null} if not set
    */
-  public String getIp() {
+  public @Nullable String getIp() {
     return ip;
   }
 
   /**
    * @return the connection platform (e.g. {@code "discord"}), or {@code null} if not set
    */
-  public String getConnectionPlatform() {
+  public @Nullable String getConnectionPlatform() {
     return connectionPlatform;
   }
 
   /**
    * @return the connection value (e.g. a user ID), or {@code null} if not set
    */
-  public String getConnectionValue() {
+  public @Nullable String getConnectionValue() {
     return connectionValue;
   }
 
@@ -81,12 +83,12 @@ public final class ValidationRequest {
    * <p>Required fields: {@link #product(String)} and {@link #server(String)}.
    */
   public static final class Builder {
-    private String key;
+    private @Nullable String key;
     private String product;
     private String server;
-    private String ip;
-    private String connectionPlatform;
-    private String connectionValue;
+    private @Nullable String ip;
+    private @Nullable String connectionPlatform;
+    private @Nullable String connectionValue;
 
     private Builder() {}
 

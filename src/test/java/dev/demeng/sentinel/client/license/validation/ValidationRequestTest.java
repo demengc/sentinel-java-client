@@ -1,4 +1,4 @@
-package dev.demeng.sentinel.client.validation;
+package dev.demeng.sentinel.client.license.validation;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -9,6 +9,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.jspecify.annotations.Nullable;
 
 public final class SignatureVerifier {
 
@@ -29,16 +30,16 @@ public final class SignatureVerifier {
   }
 
   public void verify(
-      String signatureBase64,
+      @Nullable String signatureBase64,
       String nonce,
       long timestamp,
-      String expiration,
+      @Nullable String expiration,
       int serverCount,
       int maxServers,
       int ipCount,
       int maxIps,
-      String tier,
-      List<String> entitlements)
+      @Nullable String tier,
+      @Nullable List<String> entitlements)
       throws SignatureVerificationException {
     if (signatureBase64 == null) {
       throw new SignatureVerificationException(
@@ -76,13 +77,13 @@ public final class SignatureVerifier {
   public String buildCanonicalPayload(
       String nonce,
       long timestamp,
-      String expiration,
+      @Nullable String expiration,
       int serverCount,
       int maxServers,
       int ipCount,
       int maxIps,
-      String tier,
-      List<String> entitlements) {
+      @Nullable String tier,
+      @Nullable List<String> entitlements) {
     StringBuilder sb = new StringBuilder();
     sb.append('{');
     sb.append("\"entitlements\":");
@@ -109,7 +110,7 @@ public final class SignatureVerifier {
     return sb.toString();
   }
 
-  private static String jsonString(String value) {
+  private static String jsonString(@Nullable String value) {
     if (value == null) return "null";
     StringBuilder sb = new StringBuilder("\"");
     for (int i = 0; i < value.length(); i++) {

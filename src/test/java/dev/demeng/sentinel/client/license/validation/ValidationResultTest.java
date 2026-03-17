@@ -1,4 +1,4 @@
-package dev.demeng.sentinel.client.validation;
+package dev.demeng.sentinel.client.license.validation;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 
 class ValidationResultTest {
 
-  private static final LicenseDetails SAMPLE_DETAILS =
-      new LicenseDetails(
+  private static final ValidationDetails SAMPLE_DETAILS =
+      new ValidationDetails(
           Instant.parse("2026-12-31T23:59:59Z"), 1, 3, 1, 3, "Pro", Set.of("advanced-features"));
 
   @Test

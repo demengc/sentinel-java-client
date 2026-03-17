@@ -1,6 +1,8 @@
-package dev.demeng.sentinel.client.validation;
+package dev.demeng.sentinel.client.license.validation;
 
 import dev.demeng.sentinel.client.exception.LicenseValidationException;
+import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The result of a license validation request.
@@ -17,14 +19,14 @@ public final class ValidationResult {
 
   private final ValidationResultType type;
   private final String message;
-  private final LicenseDetails details;
-  private final FailureDetails failureDetails;
+  private final @Nullable ValidationDetails details;
+  private final @Nullable FailureDetails failureDetails;
 
   private ValidationResult(
       ValidationResultType type,
       String message,
-      LicenseDetails details,
-      FailureDetails failureDetails) {
+      @Nullable ValidationDetails details,
+      @Nullable FailureDetails failureDetails) {
     this.type = type;
     this.message = message;
     this.details = details;
@@ -38,7 +40,7 @@ public final class ValidationResult {
    * @param message the API response message
    * @return a successful result
    */
-  public static ValidationResult success(LicenseDetails details, String message) {
+  public static ValidationResult success(ValidationDetails details, String message) {
     return new ValidationResult(ValidationResultType.SUCCESS, message, details, null);
   }
 
@@ -62,7 +64,7 @@ public final class ValidationResult {
    * @return a failed result
    */
   public static ValidationResult failure(
-      ValidationResultType type, String message, FailureDetails failureDetails) {
+      ValidationResultType type, String message, @Nullable FailureDetails failureDetails) {
     return new ValidationResult(type, message, null, failureDetails);
   }
 
@@ -99,7 +101,7 @@ public final class ValidationResult {
    *
    * @return the license details, or {@code null}
    */
-  public LicenseDetails getDetails() {
+  public @Nullable ValidationDetails getDetails() {
     return details;
   }
 
@@ -110,7 +112,7 @@ public final class ValidationResult {
    *
    * @return the failure details, or {@code null}
    */
-  public FailureDetails getFailureDetails() {
+  public @Nullable FailureDetails getFailureDetails() {
     return failureDetails;
   }
 
@@ -121,11 +123,11 @@ public final class ValidationResult {
    * @return the license details
    * @throws LicenseValidationException if the license is not valid
    */
-  public LicenseDetails requireValid() throws LicenseValidationException {
+  public ValidationDetails requireValid() throws LicenseValidationException {
     if (!isValid()) {
       throw new LicenseValidationException(type, message);
     }
-    return details;
+    return Objects.requireNonNull(details);
   }
 
   @Override

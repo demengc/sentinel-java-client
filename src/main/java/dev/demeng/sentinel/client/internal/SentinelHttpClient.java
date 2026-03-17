@@ -9,8 +9,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.jspecify.annotations.Nullable;
 
 public final class SentinelHttpClient {
 
@@ -46,7 +48,10 @@ public final class SentinelHttpClient {
   }
 
   public SentinelHttpResponse request(
-      String method, String path, String jsonBody, Map<String, String> queryParams)
+      String method,
+      String path,
+      @Nullable String jsonBody,
+      @Nullable Map<String, String> queryParams)
       throws SentinelConnectionException {
     String url = baseUrl + path;
     if (queryParams != null && !queryParams.isEmpty()) {
@@ -57,7 +62,30 @@ public final class SentinelHttpClient {
                   .map(e -> encode(e.getKey()) + "=" + encode(e.getValue()))
                   .collect(Collectors.joining("&"));
     }
+    return doRequest(method, url, jsonBody);
+  }
 
+  public SentinelHttpResponse requestWithMultiValuedParams(
+      String method, String path, Map<String, List<String>> queryParams)
+      throws SentinelConnectionException {
+    String url = baseUrl + path;
+    if (queryParams != null && !queryParams.isEmpty()) {
+      url +=
+          "?"
+              + queryParams.entrySet().stream()
+                  .sorted(Map.Entry.comparingByKey())
+                  .flatMap(
+                      e ->
+                          e.getValue().stream()
+                              .sorted()
+                              .map(v -> encode(e.getKey()) + "=" + encode(v)))
+                  .collect(Collectors.joining("&"));
+    }
+    return doRequest(method, url, null);
+  }
+
+  private SentinelHttpResponse doRequest(String method, String url, @Nullable String jsonBody)
+      throws SentinelConnectionException {
     HttpRequest.Builder builder =
         HttpRequest.newBuilder()
             .uri(URI.create(url))

@@ -5,10 +5,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import dev.demeng.sentinel.client.exception.SentinelApiException;
+import org.jspecify.annotations.Nullable;
 
 public final class ApiResponseParser {
 
-  public record ApiResponse(int httpStatus, String type, String message, JsonObject result) {}
+  public record ApiResponse(
+      int httpStatus,
+      @Nullable String type,
+      @Nullable String message,
+      @Nullable JsonObject result) {}
 
   public ApiResponse parse(SentinelHttpResponse response, int... allowedStatuses)
       throws SentinelApiException {
@@ -55,7 +60,7 @@ public final class ApiResponseParser {
     throw new SentinelApiException(status, type, message, retryAfter);
   }
 
-  private static String getStringOrNull(JsonObject obj, String key) {
+  private static @Nullable String getStringOrNull(JsonObject obj, String key) {
     JsonElement el = obj.get(key);
     if (el == null || el.isJsonNull()) return null;
     return el.getAsString();

@@ -1,10 +1,10 @@
 package dev.demeng.sentinel.client.exception;
 
-import dev.demeng.sentinel.client.validation.ValidationResultType;
+import dev.demeng.sentinel.client.license.validation.ValidationResultType;
 
 /**
- * Thrown by {@link dev.demeng.sentinel.client.validation.ValidationResult#requireValid()} when the
- * license validation result indicates failure.
+ * Thrown by {@link dev.demeng.sentinel.client.license.validation.ValidationResult#requireValid()}
+ * when the license validation result indicates failure.
  */
 public final class LicenseValidationException extends SentinelException {
 

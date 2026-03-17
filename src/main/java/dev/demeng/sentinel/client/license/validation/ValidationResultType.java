@@ -1,4 +1,6 @@
-package dev.demeng.sentinel.client.validation;
+package dev.demeng.sentinel.client.license.validation;
+
+import org.jspecify.annotations.Nullable;
 
 /**
  * The type of a license validation result, indicating whether validation succeeded and, if not, the
@@ -37,7 +39,7 @@ public enum ValidationResultType {
    * @param value the string representation of the result type
    * @return the matching enum constant, or {@link #UNKNOWN}
    */
-  public static ValidationResultType fromString(String value) {
+  public static ValidationResultType fromString(@Nullable String value) {
     if (value == null) {
       return UNKNOWN;
     }
