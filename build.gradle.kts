@@ -54,6 +54,10 @@ spotless {
     }
 }
 
+val setupGitHooks by tasks.registering(Exec::class) {
+    commandLine("git", "config", "core.hooksPath", ".githooks")
+}
+
 tasks.javadoc {
     (options as StandardJavadocDocletOptions).apply {
         addStringOption("Xdoclint:none", "-quiet")

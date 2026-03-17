@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+STAGED_JAVA=$(git diff --cached --name-only --diff-filter=ACM -- '*.java')
+
+if [ -z "$STAGED_JAVA" ]; then
+  exit 0
+fi
+
+printf "Formatting Java files... "
+if ./gradlew spotlessApply -q > /dev/null 2>&1; then
+  echo "$STAGED_JAVA" | xargs git add
+  echo "OK"
+else
+  echo "FAILED"
+  exit 1
+fi
