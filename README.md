@@ -4,8 +4,6 @@ Java client library for the [Sentinel](https://demeng.dev/sentinel) API.
 
 ## Installation
 
-This library is published to Maven Central.
-
 ### Gradle
 
 ```kotlin
@@ -42,7 +40,6 @@ SentinelClient client = SentinelClient.builder()
 ValidationResult result = client.licenses().validate(
     ValidationRequest.builder()
         .product("my-product")
-        .server("server-1")
         .key("LICENSE-KEY")
         .build());
 
@@ -57,28 +54,17 @@ if (result.isValid()) {
 
 ## Validation
 
-Every validation request requires `product` and `server`. The license is identified in one of
-two ways:
+Every validation request requires `product` and a license identifier:
 
 - **By key**: provide `key` to look up a specific license directly.
 - **By connection**: provide `connectionPlatform` and `connectionValue` (e.g., `"discord"` and a
   user ID) to resolve the license through a platform connection. If the product has auto-creation
   enabled and no matching license exists, one is created automatically.
 
-`ip` can optionally be provided to manually specify the client IP address. If omitted, the
-server detects it automatically from the request. Either way, the IP is tracked and counted
-against the license's IP limit.
-
-### Validating by Key
-
-```java
-ValidationResult result = client.licenses().validate(
-    ValidationRequest.builder()
-        .product("my-product")
-        .server("server-1")
-        .key("LICENSE-KEY")
-        .build());
-```
+| Optional Field | Default | Notes |
+|---|---|---|
+| `server` | `MachineFingerprint.generate()` (see [Utilities](#utilities)) | Stable machine identifier |
+| `ip` | Auto-detected from request | Tracked against the license's IP limit |
 
 ### Validating by Connection
 
@@ -86,7 +72,6 @@ ValidationResult result = client.licenses().validate(
 ValidationResult result = client.licenses().validate(
     ValidationRequest.builder()
         .product("my-product")
-        .server("server-1")
         .connectionPlatform("discord")
         .connectionValue("123456789")
         .build());
@@ -167,8 +152,6 @@ falls outside the replay protection window.
 
 ## License Management
 
-All license operations are accessed through `client.licenses()`.
-
 ### CRUD
 
 ```java
@@ -214,8 +197,7 @@ License regenerated = client.licenses().regenerateKey("OLD-KEY", "NEW-KEY");
 
 ### Connections, Servers, IPs, and Sub-Users
 
-Each resource type has its own operations facade with `add` and `remove` methods. All
-operations return the updated `License`.
+All operations return the updated `License`.
 
 ```java
 import dev.demeng.sentinel.client.license.*;
@@ -236,6 +218,37 @@ client.licenses().ips().remove("LICENSE-KEY", Set.of("192.168.1.1"));
 client.licenses().subUsers().add("LICENSE-KEY", List.of(new SubUser("discord", "987654321")));
 client.licenses().subUsers().remove("LICENSE-KEY", List.of(new SubUser("discord", "987654321")));
 ```
+
+## Utilities
+
+### MachineFingerprint
+
+Generates a stable, unique identifier for the current machine.
+
+The fingerprint is derived from platform-specific machine identifiers (`/etc/machine-id` on
+Linux, `IOPlatformUUID` on macOS, `MachineGuid` on Windows) with a fallback based on system
+properties, hostname, and MAC addresses. The result is a 32-character lowercase hex string.
+
+```java
+String fingerprint = MachineFingerprint.generate();
+```
+
+### PublicIp
+
+Resolves the public IP address of the current machine by querying an external service. The
+preferred approach is to configure your reverse proxy to forward the real client IP (e.g.,
+`X-Forwarded-For`). This utility exists only as a fallback for environments where that is not
+possible.
+
+```java
+ValidationRequest request = ValidationRequest.builder()
+    .product("my-product")
+    .key("LICENSE-KEY")
+    .ip(PublicIp.resolve())
+    .build();
+```
+
+`resolve()` returns `null` if the lookup fails for any reason (timeout, network error, etc.).
 
 ## Error Handling
 
