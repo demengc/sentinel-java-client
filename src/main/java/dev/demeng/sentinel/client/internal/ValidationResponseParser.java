@@ -38,8 +38,7 @@ public final class ValidationResponseParser {
     if (response.httpStatus() == 403) {
       ValidationResultType resultType = ValidationResultType.fromString(response.type());
       if (resultType == ValidationResultType.UNKNOWN) {
-        throw new SentinelApiException(
-            response.httpStatus(), response.type(), response.message());
+        throw new SentinelApiException(response.httpStatus(), response.type(), response.message());
       }
       FailureDetails failureDetails = parseFailureDetails(resultType, response.result());
       return new ParsedValidationResponse(
