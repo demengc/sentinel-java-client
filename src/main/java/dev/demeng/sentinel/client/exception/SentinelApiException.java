@@ -6,8 +6,10 @@ import org.jspecify.annotations.Nullable;
  * Thrown when the Sentinel API returns an error response (e.g. 401 Unauthorized, 429 Too Many
  * Requests, or 500 Internal Server Error).
  *
- * <p>This exception is not thrown for 403 validation failures, which are instead returned as a
- * failed {@link dev.demeng.sentinel.client.license.validation.ValidationResult}.
+ * <p>Known 403 validation failures (e.g. expired or blacklisted license) are returned as a failed
+ * {@link dev.demeng.sentinel.client.license.validation.ValidationResult} rather than thrown.
+ * Unrecognized 403 responses (e.g. permission denied due to a missing API key) are thrown as this
+ * exception.
  */
 public final class SentinelApiException extends SentinelException {
 

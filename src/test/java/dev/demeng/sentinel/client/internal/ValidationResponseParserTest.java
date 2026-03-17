@@ -173,10 +173,13 @@ class ValidationResponseParserTest {
   }
 
   @Test
-  void parses403UnknownType() throws SentinelApiException {
-    var parsed = parser.parse(apiResponse(403, "NEW_TYPE", "msg", "{}"));
-    assertEquals(ValidationResultType.UNKNOWN, parsed.result().getType());
-    assertNull(parsed.result().getFailureDetails());
+  void throws403UnknownType() {
+    SentinelApiException ex =
+        assertThrows(
+            SentinelApiException.class,
+            () -> parser.parse(apiResponse(403, "NEW_TYPE", "msg", "{}")));
+    assertEquals(403, ex.getHttpStatus());
+    assertEquals("NEW_TYPE", ex.getType());
   }
 
   @Test
