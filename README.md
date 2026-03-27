@@ -1,3 +1,5 @@
+[![Maven Central](https://img.shields.io/maven-central/v/dev.demeng.sentinel/sentinel-java-client)](https://central.sonatype.com/artifact/dev.demeng.sentinel/sentinel-java-client)
+
 # Sentinel Java Client
 
 Official Java client library for the [Sentinel](https://demeng.dev/sentinel) v2 API.
