@@ -1,4 +1,4 @@
-package dev.demeng.sentinel.client;
+package dev.demeng.sentinel.client.util;
 
 import static org.junit.jupiter.api.Assertions.*;
 

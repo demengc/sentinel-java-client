@@ -1,6 +1,6 @@
 package dev.demeng.sentinel.client.license.validation;
 
-import dev.demeng.sentinel.client.MachineFingerprint;
+import dev.demeng.sentinel.client.util.MachineFingerprint;
 import org.jspecify.annotations.Nullable;
 
 /**
