@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "dev.demeng.sentinel"
-version = "2.0.0-SNAPSHOT"
+version = "2.0.0"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
