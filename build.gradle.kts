@@ -116,6 +116,6 @@ nmcp {
     publishAllPublicationsToCentralPortal {
         username = findProperty("centralPortalUsername") as String? ?: ""
         password = findProperty("centralPortalPassword") as String? ?: ""
-        publishingType = "USER_MANAGED"
+        publishingType = "AUTOMATIC"
     }
 }
