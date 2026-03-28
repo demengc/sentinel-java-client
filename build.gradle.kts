@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "dev.demeng.sentinel"
-version = "0.0.0-SNAPSHOT"
+version = findProperty("releaseVersion") as String? ?: "0.0.0-SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
