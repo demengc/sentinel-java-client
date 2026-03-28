@@ -28,7 +28,7 @@ class LicenseServerOperationsTest {
         "result": {"license": {
           "id": "uuid-1", "key": "KEY-123",
           "product": {"id": "p1", "name": "Prod", "description": null, "logoUrl": null},
-          "tier": {"id": "t1", "name": "Default", "entitlements": []}, "issuer": {"type": "API_KEY", "id": "i1", "displayName": "Admin"},
+          "tier": {"name": "Default", "entitlements": []}, "issuer": {"type": "API_KEY", "id": "i1", "displayName": "Admin"},
           "createdAt": "2026-01-01T00:00:00Z", "expiration": null,
           "maxServers": -1, "maxIps": -1, "note": null,
           "connections": {}, "subUsers": [], "servers": {"srv-1": "2026-01-15T10:00:00Z"}, "ips": {},

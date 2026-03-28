@@ -44,9 +44,7 @@ public final class LicenseResponseParser {
         tierEntitlements.add(e.getAsString());
       }
     }
-    LicenseTier tier =
-        new LicenseTier(
-            tierObj.get("id").getAsString(), getStringOrNull(tierObj, "name"), tierEntitlements);
+    LicenseTier tier = new LicenseTier(tierObj.get("name").getAsString(), tierEntitlements);
 
     JsonObject issuerObj = obj.getAsJsonObject("issuer");
     LicenseIssuer issuer =
