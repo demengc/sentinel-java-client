@@ -33,8 +33,9 @@ import org.jspecify.annotations.Nullable;
  *         <li>FreeBSD: {@code kern.hostuuid} via sysctl
  *       </ul>
  *   <li><b>Fallback</b>: zero-configuration signals that remain available to unprivileged
- *       processes, prioritizing host-visible hardware or virtualization identifiers, then usable
- *       MAC addresses with OS properties, then OS properties with hostname.
+ *       processes, prioritizing host-visible hardware or virtualization identifiers, supplemented
+ *       by OS properties, hostname, and stable MAC addresses. In containers, locally administered
+ *       (randomly assigned) MAC addresses are excluded to avoid fingerprint churn across restarts.
  * </ol>
  *
  * <p>The result is always a 32-character lowercase hex string (SHA-256 truncated to 128 bits).
@@ -175,14 +176,11 @@ public final class MachineFingerprint {
       }
     }
     List<String> macs = readMacAddresses(containerized);
-    if (macs.isEmpty() && containerized) {
-      macs = readMacAddresses(false);
-    }
     for (String mac : macs) {
       sb.append('\0').append(mac);
     }
 
-    if (macs.isEmpty() && hostname == null) {
+    if (macs.isEmpty() && hostname == null && !containerized) {
       sb.append('\0').append(System.getProperty("user.name", ""));
       sb.append('\0').append(System.getProperty("user.home", ""));
     }
