@@ -5,6 +5,8 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import dev.demeng.sentinel.client.exception.SentinelApiException;
 import dev.demeng.sentinel.client.exception.SentinelException;
 import dev.demeng.sentinel.client.internal.ApiResponseParser;
@@ -12,9 +14,12 @@ import dev.demeng.sentinel.client.internal.LicenseResponseParser;
 import dev.demeng.sentinel.client.internal.PageResponseParser;
 import dev.demeng.sentinel.client.internal.SentinelHttpClient;
 import dev.demeng.sentinel.client.internal.SentinelHttpResponse;
+import dev.demeng.sentinel.client.license.validation.ValidationRequest;
+import dev.demeng.sentinel.client.license.validation.ValidationResult;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 class LicenseServiceTest {
 
@@ -155,5 +160,56 @@ class LicenseServiceTest {
     License license = service.regenerateKey("KEY-123");
 
     assertNotNull(license);
+  }
+
+  private static final String VALIDATION_SUCCESS_RESPONSE =
+      """
+      {
+        "timestamp": 100, "status": "OK", "type": "SUCCESS", "message": "OK",
+        "result": {"validation": {
+          "nonce": "n1", "timestamp": 100, "signature": null,
+          "details": {
+            "expiration": null, "serverCount": 0, "maxServers": -1,
+            "ipCount": 0, "maxIps": -1, "tier": "Default", "entitlements": []
+          }
+        }}
+      }
+      """;
+
+  @Test
+  void validateWithProduct() throws SentinelException {
+    ArgumentCaptor<String> body = ArgumentCaptor.forClass(String.class);
+    when(mockHttp.request(eq("POST"), eq("/api/v2/licenses/validate"), body.capture()))
+        .thenReturn(new SentinelHttpResponse(200, VALIDATION_SUCCESS_RESPONSE, Map.of()));
+
+    ValidationResult result =
+        service.validate(ValidationRequest.builder().product("Prod").server("srv-1").build());
+
+    assertTrue(result.isValid());
+    JsonObject sent = JsonParser.parseString(body.getValue()).getAsJsonObject();
+    assertEquals("Prod", sent.get("product").getAsString());
+    assertFalse(sent.has("listingPlatform"));
+    assertFalse(sent.has("listingResourceId"));
+  }
+
+  @Test
+  void validateWithListingIdentification() throws SentinelException {
+    ArgumentCaptor<String> body = ArgumentCaptor.forClass(String.class);
+    when(mockHttp.request(eq("POST"), eq("/api/v2/licenses/validate"), body.capture()))
+        .thenReturn(new SentinelHttpResponse(200, VALIDATION_SUCCESS_RESPONSE, Map.of()));
+
+    ValidationResult result =
+        service.validate(
+            ValidationRequest.builder()
+                .listingPlatform("Spigot")
+                .listingResourceId("12345")
+                .server("srv-1")
+                .build());
+
+    assertTrue(result.isValid());
+    JsonObject sent = JsonParser.parseString(body.getValue()).getAsJsonObject();
+    assertFalse(sent.has("product"));
+    assertEquals("Spigot", sent.get("listingPlatform").getAsString());
+    assertEquals("12345", sent.get("listingResourceId").getAsString());
   }
 }

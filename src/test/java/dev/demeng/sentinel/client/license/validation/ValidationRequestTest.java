@@ -16,6 +16,8 @@ class ValidationRequestTest {
             .ip("1.2.3.4")
             .connectionPlatform("discord")
             .connectionValue("123456789")
+            .listingPlatform("Spigot")
+            .listingResourceId("12345")
             .build();
 
     assertEquals("ABC-12345-XYZ", request.getKey());
@@ -24,10 +26,12 @@ class ValidationRequestTest {
     assertEquals("1.2.3.4", request.getIp());
     assertEquals("discord", request.getConnectionPlatform());
     assertEquals("123456789", request.getConnectionValue());
+    assertEquals("Spigot", request.getListingPlatform());
+    assertEquals("12345", request.getListingResourceId());
   }
 
   @Test
-  void buildsWithOnlyRequiredFields() {
+  void buildsWithOnlyProduct() {
     ValidationRequest request = ValidationRequest.builder().product("my-product").build();
 
     assertNull(request.getKey());
@@ -36,6 +40,19 @@ class ValidationRequestTest {
     assertNull(request.getIp());
     assertNull(request.getConnectionPlatform());
     assertNull(request.getConnectionValue());
+    assertNull(request.getListingPlatform());
+    assertNull(request.getListingResourceId());
+  }
+
+  @Test
+  void buildsWithOnlyListingIdentification() {
+    ValidationRequest request =
+        ValidationRequest.builder().listingPlatform("Spigot").listingResourceId("12345").build();
+
+    assertNull(request.getProduct());
+    assertEquals("Spigot", request.getListingPlatform());
+    assertEquals("12345", request.getListingResourceId());
+    assertTrue(request.getServer().matches("[0-9a-f]{32}"));
   }
 
   @Test
@@ -52,14 +69,5 @@ class ValidationRequestTest {
     ValidationRequest request =
         ValidationRequest.builder().product("my-product").server("custom-server").build();
     assertEquals("custom-server", request.getServer());
-  }
-
-  @Test
-  void throwsWhenProductMissing() {
-    IllegalStateException ex =
-        assertThrows(
-            IllegalStateException.class,
-            () -> ValidationRequest.builder().server("server-1").build());
-    assertTrue(ex.getMessage().contains("product"));
   }
 }
