@@ -241,13 +241,17 @@ public final class LicenseService {
   private String buildValidationJson(ValidationRequest request) {
     Map<String, String> body = new LinkedHashMap<>();
     if (request.getKey() != null) body.put("key", request.getKey());
-    body.put("product", request.getProduct());
+    if (request.getProduct() != null) body.put("product", request.getProduct());
     body.put("server", request.getServer());
     if (request.getIp() != null) body.put("ip", request.getIp());
     if (request.getConnectionPlatform() != null)
       body.put("connectionPlatform", request.getConnectionPlatform());
     if (request.getConnectionValue() != null)
       body.put("connectionValue", request.getConnectionValue());
+    if (request.getListingPlatform() != null)
+      body.put("listingPlatform", request.getListingPlatform());
+    if (request.getListingResourceId() != null)
+      body.put("listingResourceId", request.getListingResourceId());
     return gson.toJson(body);
   }
 
